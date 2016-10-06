@@ -1,0 +1,313 @@
+﻿{% extends 'webapp/admin/admin_head.html' %}
+
+
+{%block title%}Admin Categories{% endblock %}
+{%block cats%}active{% endblock %}
+{% block contents %}
+<h2>Where are the goods?</h2>
+<p><i>This is soon to be the admin product page</i></p>
+
+<h3>List Of Categories</h3>
+<div id="btn1" type="button" class="btn btn-primary" data-toggle="modal" data-target="#CRUDmodal1">Create Categories</div>
+<br />
+<br />
+<ul id="catlist">
+{% for some in categories %}
+    <li type="cat{{some.id}}"><div class="btn btn-xs btn-primary cat-update" data="{{some.id}}" >Update</div>
+        <div class="btn btn-xs btn-danger cat-delete" data="{{some.id}}">Delete</div>
+        {{some.name}}</li><br />
+{% endfor %}
+</ul>
+
+<h3>List Of Subcategories</h3>
+<div id="btn2" type="button" class="btn btn-primary" data-toggle="modal" data-target="#CRUDmodal2">Create Sub Categories</div>
+<br />
+<br />
+<ul id="subcatlist">
+    {% for some in subcategories %}
+
+        <li type="subcat{{some.id}}"><div class="btn btn-xs btn-primary subcat-update" data="{{some.id}}" >Update</div>
+            <div class="btn btn-xs btn-danger subcat-delete" data="{{some.id}}">Delete</div>
+            {{some.name}} from {{some.parent}}
+        </li><br />
+    {% endfor %}
+</ul>
+
+<!-- modal CRUD -->
+<div class="modal fade" id="CRUDmodal1" data-backdrop="static" data-keyboard="true" role="dialog" state="FALSE">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 style="color:black" id="modalhead">Create Categories</h4>
+            </div>
+            <div class="modal-body">
+                
+                <form id="form1">
+                {% csrf_token %}
+                    <input type="hidden" name="id" id="cat-id" value="" />
+                    <div class="form-group">
+                    <label for="name">Name :</label>
+                    <input type="text" class="form-control" name="name" id="cat_name" required=TRUE/>  
+                    </div>
+                    <div class="form-group">
+                    <label for="name">Description :</label>
+                    <input type="text" class="form-control" name="desc" id="cat_desc" required=TRUE/>  
+                    </div>
+                    <input type="submit" class="btn btn-primary" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal CRUD sub categories-->
+<div class="modal fade" id="CRUDmodal2" data-backdrop="static" data-keyboard="true" role="dialog" state="FALSE">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 style="color:black" id="modalhead">Create Categories</h4>
+            </div>
+            <div class="modal-body">
+                
+                <form id="form2">
+                        <input type="hidden" name="id" id="subcat-id" value="" />
+                {% csrf_token %}
+                    <div class="form-group">
+                    <label for="name">Name :</label>
+                    <input type="text" class="form-control" name="name" id="subcat_name" required=TRUE/>  
+                    </div>
+                    <div class="form-group">
+                    <label for="name">Description :</label>
+                    <input type="text" class="form-control" name="desc" id="subcat_desc" required=TRUE/>  
+                    </div>
+                    <div class="form-group">
+                    <label for="parent">Parent :</label>
+                        <select name="parent" class="form-control" id="subcat_parent">
+                            {% for some in categories %}
+                            <option value="{{some.name}}">{{some.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="submit" class="btn btn-primary" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        
+        
+        var csrftoken = $("input[name = csrfmiddlewaretoken]").val();
+        
+       
+        
+        $("#btn1").click(function () {
+            
+            $("#cat_name").val('');
+            $("#cat_desc").val('') ;
+            $("#CRUDmodal1").show();
+        });
+    //////////////////////////
+        $("#form1").on('submit', function () {
+            event.preventDefault();
+            console.log($("#CRUDmodal1").attr("state"));
+            if($("#CRUDmodal1").attr("state") == "FALSE" ){  
+            console.log("inside")  
+            $.ajax({
+                url : '{% url 'crudhandler' %}',
+                type : 'POST',
+                data : { content : '0' , operation : '0' , name : $("#cat_name").val(), desc : $("#cat_desc").val(), csrfmiddlewaretoken : csrftoken},  
+                
+                success : function(data){
+                   console.log(data.result);
+                   if (data.result['result'] == 4){
+                    console.log("success")
+                    $("#catlist").append('<li type="cat'+data.result['id']+'"><div class="btn btn-xs btn-primary cat-update" data="'+data.result['id']+'" >Update</div> <div class="btn btn-xs btn-danger cat-delete" data="'+data.result['id']+'">Delete</div> '+ $("#cat_name").val()+'</li>')
+                    $("#CRUDmodal1").modal("hide");
+                    
+                    }
+                   else {
+                    console.log ("failed")
+                    }
+                   
+                    
+                }
+                    
+            });}
+            else {
+                $.ajax({
+                url : '{% url 'crudhandler' %}',
+                type : 'POST',
+                data : { content : '0' , operation : '1' , name : $("#cat_name").val(), desc : $("#cat_desc").val(), id : $("#cat-id").val() , csrfmiddlewaretoken : csrftoken},  
+                
+                success : function(data){
+                   console.log(data.result);
+                   if (data.result['result'] == 4){
+                    console.log("success")
+                    $('li[type=cat'+$("#cat-id").val()+']').html('<div class="btn btn-xs btn-primary cat-update" data="'+$("#cat-id").val()+'" >Update</div> <div class="btn btn-xs btn-danger cat-delete" data="'+$("#cat-id").val()+'">Delete</div> '+ $("#cat_name").val());
+                    $("#CRUDmodal1").attr("state", "FALSE"); 
+                    $("#CRUDmodal1").modal("hide");
+                    }else{
+                    console.log("update failed")
+                    }
+                  
+                   
+                    
+                }
+                    
+            });
+            };
+        });
+    ///////////////////////
+        $("ul").on('click','.cat-update', function(){
+            
+            var idselected = $(this).attr("data");
+            $.ajax({
+                url : '{% url 'crudhandler' %}',
+                type : 'POST',
+                data : { content : '0' , operation : '3' , id : idselected, csrfmiddlewaretoken : csrftoken},  
+                
+                success : function(data){
+                    $("#CRUDmodal1").attr("state", "TRUE"); 
+                    var dash = data.result
+                    console.log(data.result['name']);
+                    $("#cat-id").val(idselected);
+                    $("#cat_name").val(dash['name'])
+                    $("#cat_desc").val(dash['description'])
+                    $("#CRUDmodal1").modal("show");
+                    
+                }
+                    
+            });
+        });
+    ////////////
+        $("ul").on('click','.cat-delete', function(){
+            
+            var idselected = $(this).attr("data");
+            $.ajax({
+                url : '{% url 'crudhandler' %}',
+                type : 'POST',
+                data : { content : '0' , operation : '2' , id : idselected, csrfmiddlewaretoken : csrftoken},  
+                
+                success : function(data){
+                    var ss = "cat"+idselected
+                    console.log(ss);
+                    $('li[type='+ss+']').remove();
+                    
+                }
+                    
+            });
+        });
+
+    ///////////////////////////////////////
+        /////////////subcat//////////////
+    //////////////////////////////////////////
+
+        $("#btn2").click(function () {
+            
+            $("#subcat_name").val('');
+            $("#subcat_desc").val('') ;
+            $("#CRUDmodal2").show();
+            });
+    ///////////////////////////////
+     $("#form2").on('submit', function () {
+            event.preventDefault();
+            console.log($("#subcat_parent").val());
+            if($("#CRUDmodal2").attr("state") == "FALSE" ){  
+          //  console.log("inside")  
+            $.ajax({
+                url : '{% url 'crudhandler' %}',
+                type : 'POST',
+                data : { content : '1' , operation : '0' , name : $("#subcat_name").val(),parents : $("#subcat_parent").val(), desc : $("#subcat_desc").val(), csrfmiddlewaretoken : csrftoken},  
+                
+                success : function(data){
+                   console.log(data.result);
+                   if (data.result['result'] == 4){
+                    console.log("success")
+                    $("#subcatlist").append('<li type="subcat'+data.result['id']+'"><div class="btn btn-xs btn-primary subcat-update" data="'+data.result['id']+'" >Update</div> <div class="btn btn-xs btn-danger subcat-delete" data="'+data.result['id']+'">Delete</div> '+ $("#subcat_name").val()+'from'+$("#subcat_parent").val()+'</li>');
+                    $("#CRUDmodal2").modal("hide");
+                    
+                    }
+                   else {
+                    console.log ("failed")
+                    }
+                   
+                    
+                }
+                    
+            });}
+            else {
+                $.ajax({
+                url : '{% url 'crudhandler' %}',
+                type : 'POST',
+                data : { content : '1' , operation : '1' , name : $("#subcat_name").val(),parents : $("#subcat_parent").val(), desc : $("#subcat_desc").val(), id : $("#subcat-id").val() , csrfmiddlewaretoken : csrftoken},  
+                
+                success : function(data){
+                   console.log(data.result);
+                   if (data.result['result'] == 4){
+                    console.log("success")
+                    $('li[type=subcat'+$("#subcat-id").val()+']').html('<div class="btn btn-xs btn-primary subcat-update" data="'+$("#subcat-id").val()+'" >Update</div> <div class="btn btn-xs btn-danger subcat-delete" data="'+$("#subcat-id").val()+'">Delete</div> '+ $("#subcat_name").val()+' from '+$("#subcat_parent").val());
+                    $("#CRUDmodal2").attr("state", "FALSE"); 
+                    $("#CRUDmodal2").modal("hide");
+                    }else{
+                    console.log("update failed");
+                    }
+                    
+                }
+                    
+                });
+            };
+        });
+
+
+
+    //////////////////
+       $("ul").on('click','.subcat-update', function(){
+            
+            var idselected = $(this).attr("data");
+            $.ajax({
+                url : '{% url 'crudhandler' %}',
+                type : 'POST',
+                data : { content : '1' , operation : '3' , id : idselected, csrfmiddlewaretoken : csrftoken},  
+                
+                success : function(data){
+                    $("#CRUDmodal2").attr("state", "TRUE"); 
+                    var dash = data.result
+                    console.log(data.result['name']);
+                    $("#subcat-id").val(idselected);
+                    $("#subcat_name").val(dash['name']);
+                    $("#subcat_desc").val(dash['description']);
+                    $('#subcat_parent').val(dash['parent']);
+                    $("#CRUDmodal2").modal("show");
+                    
+                }
+                    
+            });
+        });
+    ////////////
+        $("ul").on('click','.subcat-delete', function(){
+            
+            var idselected = $(this).attr("data");
+            $.ajax({
+                url : '{% url 'crudhandler' %}',
+                type : 'POST',
+                data : { content : '1' , operation : '2' , id : idselected, csrfmiddlewaretoken : csrftoken},  
+                
+                success : function(data){
+                    var ss = "subcat"+idselected
+                    console.log(ss);
+                    $('li[type='+ss+']').remove();
+                    
+                }
+                    
+            });
+        });
+     ///////////////////////   
+    });
+</script>
+
+
+{% endblock %}

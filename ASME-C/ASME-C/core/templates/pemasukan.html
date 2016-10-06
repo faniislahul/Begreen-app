@@ -1,0 +1,80 @@
+﻿{% extends 'home.html' %}
+
+{% block content %}
+<h2>Pemasukan baru</h2>
+
+<form method="post" action="{% url 'pemasukan_response' %}"  role="form">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="tipe">Jenis :</label>
+        <select name="tipe" class="form-control" id="tp">
+            <option value="0">Penjualan</option>
+            <option value="1">Penerimaan Piutang</option>
+            <option value="2">Peminjaman Uang</option>
+            <option value="3">Setoran Modal</option>
+        </select>
+    </div>
+
+    <div class="form-group" id="jp">
+        <label for="produk">Jenis :</label>
+        <select name="produk" class="form-control" id="jb">
+            {% for jenis in produk %}
+                <option class="produk" harga = "{{jenis.harga_jual}}" value="{{jenis.kode}}">{{jenis.nama}}</option>
+       
+            {% endfor %}
+            </select>
+
+    </div>
+    
+    <div class="form-group" id="bbq">
+        <label for="qty">Kuantitas :</label>
+        <input type="number" class="form-control" name="qty" id="qty">
+    </div>
+    <div class="form-group hidden" id="jby">
+        <label for="qty">Jumlah Bayar :</label>
+        <input type="number" class="form-control" name="jbr" id="jbr">
+    </div>
+    <div class="form-group" id="hahad">
+        <label for="jumlah">Total Harga:</label>
+        <input type="text" class="form-control" readonly="readonly" name="jumlah" id="jumlah">
+    </div>
+    
+    <div class="form-group hidden" id="ktr">
+        <label for="details">Keterangan :</label>
+        <input type="text" class="form-control" name="details">
+    </div>
+    <input type="submit" class="btn btn-primary" value="Submit" />
+</form>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#tp').change(function(){
+        
+            if ($('#tp').find(':selected').val() == '0'){
+                $('#jp').removeClass("hidden");
+                $('#ktr').addClass("hidden");
+                $('#bbq').removeClass("hidden");
+                $('#jby').addClass("hidden");
+                $('#hahad').removeClass("hidden");
+
+            }
+            else{
+                $('#jp').addClass("hidden");
+                $('#ktr').removeClass("hidden");
+                $('#bbq').addClass("hidden");
+                $('#jby').removeClass("hidden");
+                $('#hahad').addClass("hidden");
+                }
+    
+    });
+    $('#qty').change(function () {
+        var index = $('#jb').find(':selected').attr("harga")
+        $('#jumlah').val(parseInt(index)*parseInt($('#qty').val()))
+    });
+    $('#jby').change(function () {
+        $('#jumlah').val(parseInt($('#jbr').val()))
+    });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:p1="http://schemas.android.com/apk/res/android"
+    p1:orientation="vertical"
+    p1:layout_width="match_parent"
+    p1:layout_height="match_parent"
+    p1:id="@+id/linearLayout1"
+    p1:gravity="center_horizontal">
+    <LinearLayout
+        p1:orientation="vertical"
+        p1:layout_width="match_parent"
+        p1:layout_height="465dp"
+        p1:id="@+id/linearLayout2"
+        p1:gravity="center"
+        p1:visibility="invisible">
+        <ImageView
+            p1:src="@drawable/profil2"
+            p1:id="@+id/imageView1"
+            p1:scaleType="fitCenter"
+            p1:layout_width="wrap_content"
+            p1:layout_height="128.0dp"
+            p1:layout_marginBottom="20dp" />
+        <TextView
+            p1:text="Lalu Fani Islahul Ardy"
+            p1:textAppearance="?android:attr/textAppearanceLarge"
+            p1:layout_width="match_parent"
+            p1:layout_height="wrap_content"
+            p1:id="@+id/textView1"
+            p1:gravity="center_horizontal"
+            p1:textAllCaps="true"
+            p1:layout_marginRight="0.0dp" />
+        <TextView
+            p1:text="115090600111024"
+            p1:textAppearance="?android:attr/textAppearanceMedium"
+            p1:layout_width="match_parent"
+            p1:layout_height="wrap_content"
+            p1:id="@+id/textView2"
+            p1:gravity="center_horizontal" />
+    </LinearLayout>
+    <Button
+        p1:text="Show Me"
+        p1:layout_width="wrap_content"
+        p1:layout_height="wrap_content"
+        p1:layout_alignParentBottom="true"
+        p1:id="@+id/button1"
+        p1:gravity="center"
+        p1:layout_marginBottom="5.0dp"
+        p1:layout_marginTop="0.0dp" />
+</LinearLayout>

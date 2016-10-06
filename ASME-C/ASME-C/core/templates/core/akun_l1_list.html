@@ -1,0 +1,17 @@
+﻿{% extends 'home.html' %}
+
+{% block content %}
+<div class="col-md-6">
+    <table class="table table-striped table-hover">
+        <tr><th>Nama</th></tr>
+        {% for akun in object_list %}
+            <tr>
+                <td><a href="{% url 'akunl1_list'%}{{ akun.kode_lv }}">{{akun.nama}}</a></td>
+               
+            </tr>
+
+    {% endfor %}
+    </table>
+    
+</div>
+{% endblock %}

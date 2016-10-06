@@ -1,0 +1,52 @@
+﻿{% extends 'home.html' %}
+
+{% block content %}
+    <h2>Persediaan</h2>
+    
+    <button id="btn1" type="button" class="btn btn-primary" data-toggle="modal" data-target="#pbb">Penggunaan Bahan Baku</button>
+    <div class="modal fade" id="pbb" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 style="color:black"><span class=""></span>Penggunaan Bahan Baku</h4>
+        </div>
+        <div class="modal-body">
+          <form role="form" action="{% url 'persediaan_response' %}" method="post">
+              {% csrf_token %}
+              <div class="form-group" id="bb">
+                    <label for="jenis-bb">Jenis :</label>
+                    <select name="jenis-bb" class="form-control">
+                    {% for jb in bb %}
+                        <option value="{{jb.kode}}">{{jb.nama}}</option>
+                    {% endfor %}
+                    </select>
+               </div>
+                <div class="form-group" id="bbq">
+                    <label for="qty">Kuantitas :</label>
+                    <input type="number" class="form-control" name="qty">
+                </div>
+            <input type="submit" class="btn btn-primary" value="submit" />
+            <input type="button" class="btn btn-danger" value="cancel" id="cancel1" />
+            </form>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+        $('#btn1').click(function () {
+            $('#pbb').show();
+        });
+        $('#cancel1').click(function () {
+            $('#pbb').modal('hide');
+        });
+
+    });
+</script>
+{% endblock %}

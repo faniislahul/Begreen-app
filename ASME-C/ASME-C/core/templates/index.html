@@ -1,0 +1,17 @@
+{% extends 'home.html' %}
+
+{% block content %}
+Statistik Penjualan
+<ul>
+{% for stat, value in stats.items %}
+<li>{{stat}} : {{value.quantity__sum}}</li>
+{%endfor%}
+
+</ul>
+<a href="{% url 'abc_calculate' %}">
+<button id="btn1" type="button" class="btn btn-primary" data-toggle="modal" data-target="#pbb">Calculate ABC</button>
+    </a>
+
+
+
+{%endblock%}

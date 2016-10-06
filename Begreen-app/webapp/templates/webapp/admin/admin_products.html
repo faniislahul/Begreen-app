@@ -1,0 +1,91 @@
+﻿{% extends 'webapp/admin/admin_head.html' %}
+
+{%block title%}Admin Products{% endblock %}
+{%block prod%}active{% endblock %}
+{% block contents %}
+<h2>Where are the goods?</h2>
+<p><i>This is soon to be the admin product page</i></p>
+
+<h2>Products List</h2>
+<div id="btn1" type="button" class="btn btn-primary" data-target="#CRUDmodal1" data-toggle="modal">Create Product</div>
+<br />
+<br />
+<ul id="productlist">
+{% for some in products %}
+
+    <li type="pro{{some.id}}">
+        <div class="btn btn-xs btn-primary pro-update" data="{{some.id}}" >Update</div>
+        <div class="btn btn-xs btn-danger pro-delete" data="{{some.id}}">Delete</div>
+        {{some.name}}
+    </li>
+    <br />
+{% endfor %}
+</ul>
+
+<!-- modal CRUD -->
+<div class="modal fade" id="CRUDmodal1" data-backdrop="static" data-keyboard="true" role="dialog" state="FALSE">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 id="modalhead">Create Product</h4>
+            </div>
+            <div class="modal-body">
+                
+                <form id="form1">
+                {% csrf_token %}
+                    <input type="hidden" name="id" id="pro_id" value="" />
+                    <div class="form-group">
+                    <label for="name">Name :</label>
+                    <input type="text" class="form-control" name="name" id="pro_name" required=TRUE/>  
+                    </div>
+                    <div class="form-group">
+                    <label for="name">Description :</label>
+                    <textarea class="form-control" id="pro_desc" name="desc" rows="5" required=TRUE></textarea>
+                    </div>
+                    <div class="form-group">
+                    <label for="price1">Price 1 :</label>
+                    <input type="number" class="form-control" name="price1" id="pro_price1"/>  
+                    </div>
+                    <div class="form-group">
+                    <label for="price2">Price 2 :</label>
+                    <input type="number" class="form-control" name="price2" id="pro_price2"/>  
+                    </div>
+                    <div class="form-group">
+                    <label for="price3">Price 3 :</label>
+                    <input type="number" class="form-control" name="price3" id="pro_price3"/>  
+                    </div>
+                    <div class="form-group">
+                    <label for="Stockable">Stockable :</label><br />
+                    <input type="checkbox"  name="stockable" id="pro_stockable" value="False"/>  
+                    </div>
+                    <div class="form-group">
+                    <label for="Category">Category :</label><br />
+                    <select class="form-control" name="categories" id="pro_category">
+                        {% for some in subcategories %}
+                        <option value="{{some.name}}">{{some.name}}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                    
+                    <input type="submit" class="btn btn-primary" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        ///////////////////////////
+        $("#btn1").on('click', function () {
+            $("#CRUDmodal1").show();
+            console.log($("#pro_stockable").val());
+
+        });
+
+        ///////////////////////////
+    });
+
+</script>
+{% endblock %}
